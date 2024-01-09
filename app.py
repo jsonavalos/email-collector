@@ -12,10 +12,10 @@ mongo = PyMongo(app)
 def home():
     return render_template("home.html")
 
-
 # Get original link from user to make short
-@app.route("/api/make_short", methods=["POST"])
+@app.route("/api/make_short", methods=["POST"]) 
 def make_short():
+    print('Inside Method make_short()')
     body = request.json
     if mongo.db.links.find({"original_link": body['link']}).count() != 0:
         res = mongo.db.links.find({"original_link": body['link']})
@@ -30,6 +30,7 @@ def make_short():
 # Redirect users to original link
 @app.route("/api/s/<short_name>")
 def home2(short_name):
+    print(short_name)
     response = mongo.db.links.find({"short_link": short_name})  # cursor
     if response.count() == 0:  # if empty ,then database doesn't contain link
         return jsonify(original_link='', short_name='')
@@ -58,6 +59,8 @@ def unique_string():
         result_str = ''.join(random.choice(letters) for i in range(5))
     return result_str
 
+def clicked():
+    print('Submit button has been clicked')
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5005, debug=True)
